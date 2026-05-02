@@ -80,7 +80,7 @@ def test_encoder_helper(encoder_helper):
 		df = cls.import_data("./data/bank_data.csv")
 		df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
 		cat_columns = df.select_dtypes(include=['str', 'category']).columns.tolist()
-		df2 = encoder_helper(df, cat_columns, None)
+		df2 = encoder_helper(df, cat_columns, 'Churn')
 		logging.info("Testing test_encoder_helper: SUCCESS")
 	except Exception as err:
 		logging.error("Testing test_encoder_helper: FAILD")
@@ -98,7 +98,7 @@ def test_perform_feature_engineering(perform_feature_engineering):
 	'''
 	try:
 		df = cls.import_data("./data/bank_data.csv")
-		X_train, X_test, y_train, y_test = perform_feature_engineering(df, None)
+		X_train, X_test, y_train, y_test = perform_feature_engineering(df, 'Churn')
 		logging.info("Testing test_perform_feature_engineering: PASSED")
 	except Exception as err:
 		logging.error("Testing test_perform_feature_engineering: FAILED")

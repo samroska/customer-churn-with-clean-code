@@ -75,14 +75,11 @@ def encoder_helper(df, category_lst, response):
     local_df = df.copy()
     for key, value in enumerate(category_lst):
         value_lst = []
-        value_groups = df.groupby(value).mean(numeric_only=True)['Churn']
+        value_groups = df.groupby(value).mean(numeric_only=True)[response]
 
         for val in df[value]:
             value_lst.append(value_groups.loc[val])
-        if not response:
-            local_df[value + '_Churn'] = value_lst
-        else:
-            local_df[response[key] + '_Churn'] = value_lst
+        local_df[value + '_Churn'] = value_lst
 
     return local_df
 
@@ -101,15 +98,15 @@ def perform_feature_engineering(df, response):
               y_test: y testing data
     '''
     local_df = df.copy()
-    local_df['Churn'] = local_df['Attrition_Flag'].apply(
+    local_df[response] = local_df['Attrition_Flag'].apply(
         lambda val: 0 if val == "Existing Customer" else 1)
     cat_columns = local_df.select_dtypes(
         include=['str', 'category']).columns.tolist()
     local_encoded_df = encoder_helper(local_df, cat_columns, response)
-    y = local_encoded_df['Churn']
+    y = local_encoded_df[response]
     X = pd.DataFrame()
     X[local_encoded_df.columns] = local_encoded_df[local_encoded_df.columns]
-    X.drop(columns=cat_columns + ['Churn'], inplace=True)
+    X.drop(columns=cat_columns + [response], inplace=True)
 
     return train_test_split(X, y, test_size=0.3, random_state=42)
 
