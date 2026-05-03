@@ -139,11 +139,11 @@ def classification_report_image(y_train,
     plt.rc('figure', figsize=(5, 5))
     plt.text(0.01, 1.25, str('Random Forest Train'), {
              'fontsize': 10}, fontproperties='monospace')
-    plt.text(0.01, 0.05, str(classification_report(y_test, y_test_preds_rf)), {
+    plt.text(0.01, 0.05, str(classification_report(y_train, y_train_preds_rf)), {
              'fontsize': 10}, fontproperties='monospace') 
     plt.text(0.01, 0.6, str('Random Forest Test'), {
              'fontsize': 10}, fontproperties='monospace')
-    plt.text(0.01, 0.7, str(classification_report(y_train, y_train_preds_rf)), {
+    plt.text(0.01, 0.7, str(classification_report(y_test, y_test_preds_rf)), {
              'fontsize': 10}, fontproperties='monospace') 
     plt.axis('off')
     plt.savefig(
