@@ -1,7 +1,12 @@
 # library doc string
 """
-Script to help compile steps from the churn_notbook.ipynb
+churn_library.py
 
+Purpose: ML library for predicting customer churn. Implements EDA, feature
+         engineering (mean target encoding), model training (Random Forest +
+         Logistic Regression), and evaluation report generation.
+Author:  Sam Roska
+Date:    May 3, 2026
 """
 
 # import libraries
@@ -11,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, RocCurveDisplay
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -182,7 +187,7 @@ def feature_importance_plot(model, X_data, output_pth):
     plt.bar(range(X_data.shape[1]), importances[indices])
     plt.xticks(range(X_data.shape[1]), names, rotation=90)
     plt.savefig(output_pth, bbox_inches='tight')
-
+    plt.close()
 
 def train_models(X_train, X_test, y_train, y_test):
     '''
@@ -220,9 +225,18 @@ def train_models(X_train, X_test, y_train, y_test):
     y_train_preds_lr = lrc.predict(X_train)
     y_test_preds_lr = lrc.predict(X_test)
 
+    feature_importance_plot(cv_rfc, X_train, './images/feature_importances.png')
     classification_report_image(y_train,
                                 y_test,
                                 y_train_preds_lr,
                                 y_train_preds_rf,
                                 y_test_preds_lr,
                                 y_test_preds_rf)
+    
+    fig, ax = plt.subplots(figsize=(15, 8))
+    RocCurveDisplay.from_estimator(lrc, X_test, y_test, ax=ax, alpha=0.8)
+    RocCurveDisplay.from_estimator(cv_rfc.best_estimator_, X_test, y_test, ax=ax, alpha=0.8)
+    plt.savefig('./images/roc_curves.png', bbox_inches='tight')
+    plt.close()
+
+

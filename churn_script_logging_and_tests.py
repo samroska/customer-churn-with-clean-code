@@ -1,3 +1,13 @@
+"""
+churn_script_logging_and_tests.py
+
+Purpose: Unit tests and logging for the functions in churn_library.py.
+         Tests cover data import, EDA, encoding, feature engineering,
+         and model training. Logs are written to ./logs/churn_library.log.
+Author:  Sam Roska
+Date:    May 3, 2026
+"""
+
 import os
 import logging
 from unittest.mock import MagicMock
@@ -122,7 +132,7 @@ def test_train_models(train_models):
 	'''
 	try:
 		df = cls.import_data("./data/bank_data.csv")
-		X_train, X_test, y_train, y_test = cls.perform_feature_engineering(df, None)
+		X_train, X_test, y_train, y_test = cls.perform_feature_engineering(df, 'Churn')
 		train_models(X_train, X_test, y_train, y_test)
 		logging.info("Testing test_train_models: SUCCESS")
 	except Exception as err:
